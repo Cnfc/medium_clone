@@ -2,11 +2,12 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
 import Routes from "./Routes";
+import { TopBar } from "./pages/components/TopBar";
 
 function App() {
   return (
     <BrowserRouter>
-      <h3>Welcome to Hooks</h3>
+      <TopBar />
       <Routes />
     </BrowserRouter>
   );
