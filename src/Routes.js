@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from "react";
 import GlobalFeed from "./pages/globalFeed";
 import Article from "./pages/article";
@@ -9,9 +10,9 @@ export default () => {
   return (
     <Switch>
       <Route exact path="/" component={GlobalFeed} />
+      <Route path="/articles/:slug" component={Article} />
       <Route path="/login" component={Auth} />
       <Route path="/register" component={Auth} />
-      <Route path="/articles/:slug" component={Article} />
     </Switch>
   );
 };

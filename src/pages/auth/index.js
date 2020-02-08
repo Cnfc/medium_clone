@@ -1,13 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
+  const [isSubmiting, setisSubmiting] = useState(false);
+
+  useEffect(() => {
+    if (!isSubmiting) {
+      return;
+    }
+    document.title = email;
+    axios("https://conduit.productionready.io/api/users/login", {
+      method: "post",
+      data: {
+        user: {
+          email: "qqq.@gmail.com",
+          password: "123"
+        }
+      }
+    })
+      .then(res => {
+        console.log("success", res);
+        setisSubmiting(false);
+      })
+      .catch(error => {
+        console.log(error);
+        setisSubmiting(false);
+      });
+  });
 
   const handleSubmit = e => {
     e.preventDefault();
     console.log(email, password);
+    setisSubmiting(true);
   };
   return (
     <div className="auth-page">
@@ -43,6 +70,7 @@ export const Auth = () => {
                 <button
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
+                  disabled={isSubmiting}
                 >
                   Sign In
                 </button>
