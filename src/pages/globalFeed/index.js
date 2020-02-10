@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { Feed } from "../components/Feed";
+import { Pagination } from "../components/Pagination";
 
 const GlobalFeed = props => {
   const apiUrl = "/articles?limit=10&offset=0";
   const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
 
-  console.log(response);
   useEffect(() => {
     doFetch();
   }, [doFetch]);
@@ -24,7 +24,12 @@ const GlobalFeed = props => {
           <div className="col-md-9">
             {isLoading && <div>Loading...</div>}
             {error && <span>Some Error happend</span>}
-            {!isLoading && response && <Feed articles={response.articles} />}
+            {!isLoading && response && (
+              <>
+                <Feed articles={response.articles} />
+                <Pagination total={500} limit={10} url="/" currentPage={2} />
+              </>
+            )}
           </div>
           <div className="col-md-3">Popular Tags</div>
         </div>
