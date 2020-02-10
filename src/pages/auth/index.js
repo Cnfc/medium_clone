@@ -6,7 +6,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 
 import { CurrentUserContext } from "../../context/currentUser";
 
-// import BackendErrorMessages from "components/BackendErrorMessages";
+import BackendErrorMessages from "../components/BackendErrorMessages";
 
 export const Auth = props => {
   const isLogin = props.match.path === "/login";
@@ -19,7 +19,7 @@ export const Auth = props => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isSuccessfullSubmit, setIsSuccessfullSubmit] = useState(false);
-  const [{ response, isLoading }, doFetch] = useFetch(apiUrl);
+  const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
   const [, setToken] = useLocalStorage("token");
   const [currentUserState, setCurrentUserState] = useContext(
     CurrentUserContext
@@ -48,7 +48,7 @@ export const Auth = props => {
       currentUser: response.user,
       currentEmail: response.user.email
     }));
-  }, [response, setToken]);
+  }, [response, setToken, setCurrentUserState]);
 
   if (isSuccessfullSubmit) {
     return <Redirect to="/" />;
@@ -64,7 +64,6 @@ export const Auth = props => {
               <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
             <form onSubmit={handleSubmit}>
-              {/* {error && <BackendErrorMessages backendErrors={error.errors} />} */}
               <fieldset>
                 {!isLogin && (
                   <fieldset className="form-group">
@@ -97,6 +96,9 @@ export const Auth = props => {
                     onChange={e => setPassword(e.target.value)}
                   />
                 </fieldset>
+
+                {error && <BackendErrorMessages backendErrors={error.errors} />}
+
                 <button
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
