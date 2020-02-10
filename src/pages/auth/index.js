@@ -1,39 +1,65 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 
 import useFetch from "../../hooks/usefetch";
 
-export const Auth = () => {
+export const Auth = props => {
+  const isLogin = props.match.path === "/login";
+  const pageTitle = isLogin ? "Sign In" : "Sign Up";
+  const descriptionLink = isLogin ? "/register" : "/login";
+  const descriptionText = isLogin ? "Need an account ?" : "Have an account ?";
+  const apiUrl = isLogin ? "/users/login" : "/users";
   const [email, setEmail] = useState("");
-  const [password, setpassword] = useState("");
-  const [{ response, isLoading, error }, doFetch] = useFetch("/users/login");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
+  const [isSeccessfullSubmit, setIsSeccessfullSubmit] = useState(false);
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(email, password);
-    isLoading(true);
+    const user = isLogin ? { email, password } : { email, password, username };
     doFetch({
       method: "post",
-      data: {
-        user: {
-          email: "qqq.@gmail.com",
-          password: "123"
-        }
-      }
+      data: { user }
     });
   };
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+    localStorage.setItem("token", response.user.token);
+    setIsSeccessfullSubmit(true);
+  }, [response]);
+
+  if (isSeccessfullSubmit) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <div className="auth-page">
       <div className="container">
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Login</h1>
+            <h1 className="text-xs-center">{pageTitle}</h1>
             <p className="text-xs-center">
-              <Link to="register">Need an account ?</Link>
+              <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
             <form onSubmit={handleSubmit}>
               <fieldset>
+                {!isLogin && (
+                  <fieldset className="form-group">
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Username"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                    />
+                  </fieldset>
+                )}
+
                 <fieldset className="form-group">
                   <input
                     type="email"
@@ -50,16 +76,15 @@ export const Auth = () => {
                     className="form-control form-control-lg"
                     placeholder="Password"
                     value={password}
-                    onChange={e => setpassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                   />
                 </fieldset>
-
                 <button
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
                   disabled={isLoading}
                 >
-                  Sign In
+                  {pageTitle}
                 </button>
               </fieldset>
             </form>
