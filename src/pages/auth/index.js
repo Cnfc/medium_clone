@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, Redirect } from "react-router-dom";
 
-import useFetch from "../../hooks/usefetch";
+import useFetch from "../../hooks/useFetch";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
 import { CurrentUserContext } from "../../context/currentUser";
