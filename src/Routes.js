@@ -6,12 +6,14 @@ import Article from "./pages/article";
 import { Switch, Route } from "react-router-dom";
 import { Auth } from "./pages/auth";
 import TagFeed from "./pages/TagFeed";
+import YourFeed from "./pages/YourFeed";
 
 export default () => {
   return (
     <Switch>
       <Route exact path="/" component={GlobalFeed} />
       <Route path="/tags/:slug" component={TagFeed} />
+      <Route path="/feed" component={YourFeed} exact />
       <Route path="/articles/:slug" component={Article} />
       <Route path="/login" component={Auth} />
       <Route path="/register" component={Auth} />
