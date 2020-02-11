@@ -27,6 +27,7 @@ export default url => {
     if (!isLoading) {
       return;
     }
+
     axios(baseUrl + url, requestoptions)
       .then(res => {
         console.log("success", res);
